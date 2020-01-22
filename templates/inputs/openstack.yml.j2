@@ -4,7 +4,7 @@
   enable: {{ item.enabled | d('true') }}
   paths:
   - '/var/log/nova/*.log'
-  - '/var/lib/docker/volumes/kolla_logs/_data/nova/*.log'
+  - '/var/log/kolla/nova/*.log'
   ignore_older: 1h
   fields:
     openstack.component: nova
@@ -18,7 +18,7 @@
   enable: {{ item.enabled | d('true') }}
   paths:
   - '/var/log/neutron/*.log'
-  - '/var/lib/docker/volumes/kolla_logs/_data/neutron/*.log'
+  - '/var/log/kolla/neutron/*.log'
   ignore_older: 1h
   fields:
     openstack.component: neutron
@@ -32,7 +32,7 @@
   enable: {{ item.enabled | d('true') }}
   paths:
   - '/var/log/glance/*.log'
-  - '/var/lib/docker/volumes/kolla_logs/_data/glance/*.log'
+  - '/var/log/kolla/glance/*.log'
   ignore_older: 1h
   fields:
     openstack.component: glance
@@ -46,7 +46,7 @@
   enable: {{ item.enabled | d('true') }}
   paths:
   - '/var/log/cinder/*.log'
-  - '/var/lib/docker/volumes/kolla_logs/_data/cinder/*.log'
+  - '/var/log/kolla/cinder/*.log'
   ignore_older: 1h
   fields:
     openstack.component: cinder
@@ -60,7 +60,7 @@
   enable: {{ item.enabled | d('true') }}
   paths:
   - '/var/log/keystone/*.log'
-  - '/var/lib/docker/volumes/kolla_logs/_data/keystone/*.log'
+  - '/var/log/kolla/keystone/*.log'
   ignore_older: 1h
   fields:
     openstack.component: keystone
@@ -74,12 +74,26 @@
   enable: {{ item.enabled | d('true') }}
   paths:
   - '/var/log/ironic/*.log'
-  - '/var/lib/docker/volumes/kolla_logs/_data/ironic/*.log'
+  - '/var/log/kolla/ironic/*.log'
   - '/var/log/ironic-inspector/*.log'
-  - '/var/lib/docker/volumes/kolla_logs/_data/ironic-inspector/*.log'
+  - '/var/log/kolla/ironic-inspector/*.log'
   ignore_older: 1h
   fields:
     openstack.component: ironic
+  fields_under_root: true
+  multiline:
+    pattern: '^.*(ERROR).*[[:space:]]{3}.*'
+    negate: false
+    match: after
+
+- type: log
+  enable: {{ item.enabled | d('true') }}
+  paths:
+  - '/var/log/designate/*.log'
+  - '/var/log/kolla/designate/*.log'
+  ignore_older: 1h
+  fields:
+    openstack.component: designate
   fields_under_root: true
   multiline:
     pattern: '^.*(ERROR).*[[:space:]]{3}.*'
