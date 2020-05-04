@@ -19,6 +19,8 @@
   paths:
   - '/var/log/neutron/*.log'
   - '/var/log/kolla/neutron/*.log'
+  exclude_files:
+  - '/var/log/neutron/dnsmasq.log'
   ignore_older: 1h
   fields:
     openstack.component: neutron
