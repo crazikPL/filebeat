@@ -1,4 +1,5 @@
 ---
+{% if es_filebeat_systemlogs %}
 filebeat.inputs:
 - type: log
 
@@ -7,8 +8,11 @@ filebeat.inputs:
 
   # Paths that should be crawled and fetched. Glob based paths.
   paths:
-    - /var/log/*.log
+{% for path in es_filebeat_system_paths %}
+    - {{ path }}
+{% endfor %}
     #- c:\programdata\elasticsearch\logs\*
+{% endif %}
 
 #============================= Filebeat inputs ================================
 filebeat.config.inputs:

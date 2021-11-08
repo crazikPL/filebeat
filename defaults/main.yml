@@ -30,6 +30,10 @@ es_filebeat_modules_cli: []
 #   enabled: true
 es_filebeat_create_webbeats_template: false
 
+es_filebeat_systemlogs: true
+es_filebeat_system_paths:
+  - "/var/log/*.log"
+
 es_filebeat_monitoring: false
 es_filebeat_docker: false
 es_filebeat_main_tags: []
