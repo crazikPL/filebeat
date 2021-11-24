@@ -1,0 +1,12 @@
+--
+
+- type: log
+  enable: {{ item.enabled | d('true') }}
+  paths:
+  - '/var/log/mysql/ptkill/*.out'
+  multiline:
+    pattern: '^(# 20)'
+    negate: true
+    match: after
+  tags: ['mysql_ptkill']
+
