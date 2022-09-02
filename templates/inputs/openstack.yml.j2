@@ -75,6 +75,15 @@
 - type: log
   enable: {{ item.enabled | d('true') }}
   paths:
+  - '/var/log/kolla/horizon/*.log'
+  ignore_older: 1h
+  fields:
+    openstack.component: horizon
+  fields_under_root: true
+
+- type: log
+  enable: {{ item.enabled | d('true') }}
+  paths:
   - '/var/log/ironic/*.log'
   - '/var/log/kolla/ironic/*.log'
   - '/var/log/ironic-inspector/*.log'
