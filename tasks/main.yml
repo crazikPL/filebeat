@@ -119,6 +119,5 @@
 - name: Pause before next server
   pause:
     seconds: "{{ es_filebeat_pause_sec }}"
-    minutes: "{{ es_filebeat_pause_min }}"
   tags:
     - filebeat
