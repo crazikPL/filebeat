@@ -55,6 +55,20 @@ filebeat.autodiscover:
 {% endif %}
 #================================ General =====================================
 
+# Workaround for https://discuss.elastic.co/t/filebeat-and-glibc-errors-on-ubuntu-22-04/306653/2
+# on older versions of filebeat
+
+{% if ansible_distribution == 'Ubuntu' and (ansible_distribution_version.split('.')[0] | int) >= 22 %}
+# This config only applies to Ubuntu 22.04+ or later
+
+seccomp:
+  default_action: allow
+  syscalls:
+  - action: allow
+    names:
+    - rseq
+{% endif %}
+
 # The name of the shipper that publishes the network data. It can be used to group
 # all the transactions sent by a single shipper in the web interface.
 #name:
