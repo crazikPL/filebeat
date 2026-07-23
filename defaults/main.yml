@@ -1,6 +1,7 @@
 ---
 es_apt_key: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
-es_apt_url: "deb https://artifacts.elastic.co/packages/{{ es_major_version }}/apt stable main"
+es_apt_url: "https://artifacts.elastic.co/packages/{{ es_major_version }}/apt"
+es_repo_det: "stable main"
 es_major_version: 6.x
 es_filebeat_version: '6.8.*'
 es_enable_pinning: true

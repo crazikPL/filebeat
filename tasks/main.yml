@@ -33,7 +33,7 @@
 
 - name: Add ElasticSearch repository
   apt_repository:
-    repo: "deb [signed-by=/etc/apt/keyrings/elasticsearch.gpg] {{ es_apt_url }}"
+    repo: "deb [signed-by=/etc/apt/keyrings/elasticsearch.gpg] {{ es_apt_url }} {{ es_repo_det }}"
     state: present
   tags: [ repository, filebeat ]
 
