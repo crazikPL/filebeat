@@ -3,20 +3,37 @@
   apt:
     name:
       - apt-transport-https
+      - gnupg
     state: present
     force_apt_get: "{{ apt_force_apt_get }}"
     install_recommends: "{{ apt_install_recommends }}"
   tags: [ packages, filebeat ]
 
-- name: Add ElasticSearch repo key
-  apt_key:
+- name: Ensure /etc/apt/keyrings exists
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  tags: [ repository, filebeat ]
+
+- name: Download ElasticSearch repo key
+  get_url:
     url: "{{ es_apt_key }}"
-    state: present
+    dest: /etc/apt/keyrings/elasticsearch.asc
+    mode: 0644
+  tags: [ repository, filebeat ]
+
+- name: Dearmor ElasticSearch repo key
+  command: gpg --batch --yes --dearmor -o /etc/apt/keyrings/elasticsearch.gpg /etc/apt/keyrings/elasticsearch.asc
+  args:
+    creates: /etc/apt/keyrings/elasticsearch.gpg
   tags: [ repository, filebeat ]
 
 - name: Add ElasticSearch repository
   apt_repository:
-    repo: "{{ es_apt_url }}"
+    repo: "deb [signed-by=/etc/apt/keyrings/elasticsearch.gpg] {{ es_apt_url }}"
     state: present
   tags: [ repository, filebeat ]
 
