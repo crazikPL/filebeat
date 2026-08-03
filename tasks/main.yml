@@ -7,7 +7,7 @@
     state: present
     force_apt_get: "{{ apt_force_apt_get }}"
     install_recommends: "{{ apt_install_recommends }}"
-  tags: [ packages, filebeat ]
+  tags: [packages, filebeat]
 
 - name: Ensure /etc/apt/keyrings exists
   file:
@@ -16,26 +16,26 @@
     owner: root
     group: root
     mode: 0755
-  tags: [ repository, filebeat ]
+  tags: [repository, filebeat]
 
 - name: Download ElasticSearch repo key
   get_url:
     url: "{{ es_apt_key }}"
     dest: /etc/apt/keyrings/elasticsearch.asc
     mode: 0644
-  tags: [ repository, filebeat ]
+  tags: [repository, filebeat]
 
 - name: Dearmor ElasticSearch repo key
   command: gpg --batch --yes --dearmor -o /etc/apt/keyrings/elasticsearch.gpg /etc/apt/keyrings/elasticsearch.asc
   args:
     creates: /etc/apt/keyrings/elasticsearch.gpg
-  tags: [ repository, filebeat ]
+  tags: [repository, filebeat]
 
 - name: Add ElasticSearch repository
   apt_repository:
     repo: "deb [signed-by=/etc/apt/keyrings/elasticsearch.gpg] {{ es_apt_url }} {{ es_repo_det }}"
     state: present
-  tags: [ repository, filebeat ]
+  tags: [repository, filebeat]
 
 - name: Filebeat | Apt pinning for pkgs
   template:
@@ -49,7 +49,7 @@
   when:
     - es_pinning_pkgs is defined
     - es_enable_pinning | bool
-  tags: [ repository, filebeat, apt ]
+  tags: [repository, filebeat, apt]
 
 - name: Update apt cache
   apt:
@@ -58,14 +58,14 @@
     - es_pinning_pkgs is defined
     - es_enable_pinning | bool
     - apt_pinning_status is changed
-  tags: [ packages, filebeat, apt ]
+  tags: [packages, filebeat, apt]
 
 - name: Install Filebeat package
   apt:
     name: "filebeat={{ es_filebeat_version }}"
     state: present
   notify: restart filebeat
-  tags: [ packages, filebeat, apt ]
+  tags: [packages, filebeat, apt]
 
 - name: Create Filebeat inputs.d directory
   file:
@@ -74,7 +74,7 @@
     mode: 0755
     owner: root
     group: root
-  tags: [ config, filebeat ]
+  tags: [config, filebeat]
 
 - name: Create main Filebeat config
   template:
@@ -84,7 +84,7 @@
     group: root
     mode: 0600
   notify: restart filebeat
-  tags: [ config, filebeat ]
+  tags: [config, filebeat]
 
 - name: Configure Filebeats inputs from templates
   template:
@@ -96,7 +96,7 @@
   loop: "{{ es_filebeat_inputs }}"
   when: item.name
   notify: restart filebeat
-  tags: [ config, filebeat ]
+  tags: [config, filebeat]
 
 - name: Configure Filebeats modules from templates
   template:
@@ -108,7 +108,7 @@
   loop: "{{ es_filebeat_modules }}"
   when: item.name
   notify: restart filebeat
-  tags: [ config, filebeat ]
+  tags: [config, filebeat]
 
 - name: Filebeats enable modules from cli  # noqa 305
   shell: filebeat modules enable {{ item.name }}
@@ -116,7 +116,7 @@
     creates: "/etc/filebeat/modules.d/{{ item.name }}.yml"
   loop: "{{ es_filebeat_modules_cli }}"
   when: item.enabled
-  tags: [ config, filebeat ]
+  tags: [config, filebeat]
 
 - name: Filebeats disable modules from cli  # noqa 305
   shell: filebeat modules disable {{ item.name|quote }}
@@ -124,14 +124,14 @@
     creates: "/etc/filebeat/modules.d/{{ item.name }}.yml.disabled"
   loop: "{{ es_filebeat_modules_cli }}"
   when: not item.enabled
-  tags: [ config, filebeat ]
+  tags: [config, filebeat]
 
 - name: Enable and start Filebeat service
   service:
     name: filebeat
     enabled: yes
     state: started
-  tags: [ filebeat ]
+  tags: [filebeat]
 
 - name: Pause before next server
   pause:
