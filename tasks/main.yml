@@ -64,7 +64,7 @@
   apt:
     name: "filebeat={{ es_filebeat_version }}"
     state: present
-  notify: restart filebeat
+  notify: Restart filebeat
   tags: [packages, filebeat, apt]
 
 - name: Create Filebeat inputs.d directory
@@ -83,7 +83,7 @@
     owner: root
     group: root
     mode: 0600
-  notify: restart filebeat
+  notify: Restart filebeat
   tags: [config, filebeat]
 
 - name: Configure Filebeats inputs from templates
@@ -95,7 +95,7 @@
     mode: 0644
   loop: "{{ es_filebeat_inputs }}"
   when: item.name
-  notify: restart filebeat
+  notify: Restart filebeat
   tags: [config, filebeat]
 
 - name: Configure Filebeats modules from templates
@@ -107,7 +107,7 @@
     mode: 0644
   loop: "{{ es_filebeat_modules }}"
   when: item.name
-  notify: restart filebeat
+  notify: Restart filebeat
   tags: [config, filebeat]
 
 - name: Filebeats enable modules from cli  # noqa 305
