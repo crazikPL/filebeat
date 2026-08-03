@@ -132,6 +132,7 @@
     enabled: yes
     state: started
   tags: [filebeat]
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Pause before next server
   pause:
